@@ -13,20 +13,19 @@ const Index = () => {
   const handleTabChange = (tab: 'stream' | 'monitor' | 'settings') => {
     setActiveTab(tab);
     const messages = {
-      stream: 'Streaming management active',
-      monitor: 'Monitor view active',
-      settings: 'Settings view active'
+      stream: 'Yayın yönetimi aktif',
+      monitor: 'Monitör görünümü aktif',
+      settings: 'Ayarlar görünümü aktif'
     };
     
     toast({
-      title: "Tab Changed",
+      title: "Sekme Değiştirildi",
       description: messages[tab],
     });
   };
 
   return (
     <div className="flex h-screen bg-zinc-950">
-      {/* Left Menu */}
       <NavigationMenu.Root className="w-16 border-r border-zinc-800 flex flex-col items-center py-4 gap-4">
         <NavigationMenu.Item>
           <Button 
@@ -60,19 +59,22 @@ const Index = () => {
         </NavigationMenu.Item>
       </NavigationMenu.Root>
 
-      {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto">
         {activeTab === 'stream' && <StreamingForm />}
         {activeTab === 'monitor' && (
           <div className="p-6">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Monitor</h2>
-            {/* Monitor content will go here */}
+            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Monitör</h2>
+            <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
+              <p className="text-zinc-400">Monitör görünümü henüz uygulanmadı</p>
+            </div>
           </div>
         )}
         {activeTab === 'settings' && (
           <div className="p-6">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Settings</h2>
-            {/* Settings content will go here */}
+            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Ayarlar</h2>
+            <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
+              <p className="text-zinc-400">Ayarlar görünümü henüz uygulanmadı</p>
+            </div>
           </div>
         )}
       </div>
