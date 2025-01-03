@@ -1,20 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { Upload } from "lucide-react";
 
 export const InputSettings = () => {
   const [separateAudio, setSeparateAudio] = useState(false);
   const { toast } = useToast();
 
-  const handleSaveSettings = () => {
+  const handleFileUpload = (type: 'video' | 'audio') => {
+    // File upload logic will be implemented here
     toast({
-      title: "Settings Saved",
-      description: "Your input settings have been saved successfully."
+      title: `${type.charAt(0).toUpperCase() + type.slice(1)} File Selected`,
+      description: `Your ${type} file has been selected successfully.`
     });
   };
 
@@ -28,14 +29,18 @@ export const InputSettings = () => {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-zinc-200">
-            Video Input (.mp4)
+            Video Input
           </label>
           <div className="flex gap-2">
             <Input
-              placeholder="Select video file"
-              className="bg-zinc-800 border-zinc-700 text-zinc-100"
+              type="file"
+              accept="video/*"
+              className="bg-zinc-800 border-zinc-700 text-zinc-100 file:bg-zinc-700 file:text-zinc-100 file:border-0 file:mr-2"
+              onChange={() => handleFileUpload('video')}
             />
-            <Button variant="secondary">Browse</Button>
+            <Button variant="secondary" size="icon">
+              <Upload className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -50,38 +55,28 @@ export const InputSettings = () => {
         {separateAudio && (
           <div className="space-y-2">
             <label className="text-sm font-medium text-zinc-200">
-              Audio Input (.aac)
+              Audio Input
             </label>
             <div className="flex gap-2">
               <Input
-                placeholder="Select audio file"
-                className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                type="file"
+                accept="audio/*"
+                className="bg-zinc-800 border-zinc-700 text-zinc-100 file:bg-zinc-700 file:text-zinc-100 file:border-0 file:mr-2"
+                onChange={() => handleFileUpload('audio')}
               />
-              <Button variant="secondary">Browse</Button>
+              <Button variant="secondary" size="icon">
+                <Upload className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         )}
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-zinc-200">
-            FFMPEG Preset
-          </label>
-          <Select>
-            <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
-              <SelectValue placeholder="Select preset" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="copy">Copy (No Transcoding)</SelectItem>
-              <SelectItem value="veryfast">Very Fast</SelectItem>
-              <SelectItem value="fast">Fast</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
         <Button 
           className="w-full bg-emerald-600 hover:bg-emerald-700"
-          onClick={handleSaveSettings}
+          onClick={() => toast({
+            title: "Settings Saved",
+            description: "Your input settings have been saved successfully."
+          })}
         >
           Save Settings
         </Button>
