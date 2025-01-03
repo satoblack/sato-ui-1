@@ -5,6 +5,8 @@ import { VideoIcon, GearIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { MonitorIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { StreamMonitorView } from "@/components/streaming/StreamMonitorView";
+import { StreamSettings } from "@/components/streaming/StreamSettings";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<'stream' | 'monitor' | 'settings'>('stream');
@@ -61,22 +63,8 @@ const Index = () => {
 
       <div className="flex-1 overflow-auto">
         {activeTab === 'stream' && <StreamingForm />}
-        {activeTab === 'monitor' && (
-          <div className="p-6">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Monitör</h2>
-            <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
-              <p className="text-zinc-400">Monitör görünümü henüz uygulanmadı</p>
-            </div>
-          </div>
-        )}
-        {activeTab === 'settings' && (
-          <div className="p-6">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-4">Ayarlar</h2>
-            <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
-              <p className="text-zinc-400">Ayarlar görünümü henüz uygulanmadı</p>
-            </div>
-          </div>
-        )}
+        {activeTab === 'monitor' && <StreamMonitorView />}
+        {activeTab === 'settings' && <StreamSettings />}
       </div>
     </div>
   );
