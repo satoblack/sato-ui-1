@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { VideoIcon, MonitorIcon, MicrophoneIcon, Settings2Icon, PlusIcon, MinusIcon, PlayIcon, StopIcon } from "lucide-react";
+import { VideoIcon, MonitorIcon, Mic, Settings2Icon, PlusIcon, MinusIcon, PlayIcon, Square } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
@@ -72,7 +72,7 @@ export const StreamingForm = () => {
                   Start Stream
                 </Button>
                 <Button variant="destructive" className="flex-1">
-                  <StopIcon className="w-4 h-4 mr-2" />
+                  <Square className="w-4 h-4 mr-2" />
                   Stop
                 </Button>
               </div>
@@ -135,7 +135,7 @@ export const StreamingForm = () => {
                     Video
                   </TabsTrigger>
                   <TabsTrigger value="audio" className="data-[state=active]:bg-zinc-700">
-                    <MicrophoneIcon className="w-4 h-4 mr-2" />
+                    <Mic className="w-4 h-4 mr-2" />
                     Audio
                   </TabsTrigger>
                   <TabsTrigger value="output" className="data-[state=active]:bg-zinc-700">
