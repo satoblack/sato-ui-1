@@ -1,7 +1,6 @@
 import { StreamProfile } from "./StreamProfile";
 import { InputSettings } from "./InputSettings";
 import { StreamControls } from "./StreamControls";
-import { StreamMonitor } from "./StreamMonitor";
 
 export const StreamingForm = () => {
   return (
@@ -10,13 +9,12 @@ export const StreamingForm = () => {
         {/* Left Column - Stream Controls */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <StreamProfile />
-          <InputSettings />
-          <StreamControls />
         </div>
 
-        {/* Right Column - Preview and Monitor */}
+        {/* Right Column - Input Settings and Controls */}
         <div className="col-span-12 lg:col-span-8 space-y-6">
-          <StreamMonitor />
+          <InputSettings />
+          <StreamControls />
         </div>
       </div>
     </div>
