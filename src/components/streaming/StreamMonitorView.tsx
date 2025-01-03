@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { VideoIcon, Waveform, Signal, Clock, Activity, Cpu } from "lucide-react";
+import { VideoIcon, AudioWaveform, Signal, Clock, Activity, Cpu } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export const StreamMonitorView = () => {
@@ -56,7 +56,7 @@ export const StreamMonitorView = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Waveform className="w-4 h-4 text-zinc-400" />
+                <AudioWaveform className="w-4 h-4 text-zinc-400" />
                 <div>
                   <p className="text-sm text-zinc-400">Audio Format</p>
                   <p className="text-zinc-100">AAC</p>
