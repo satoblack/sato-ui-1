@@ -38,19 +38,34 @@ export const ProfileDialog = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter profile name"
-              className="bg-zinc-800 border-zinc-700 text-zinc-100"
+              className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
             />
           </div>
         </div>
         <DialogFooter className="flex justify-between">
           {showDelete && (
-            <Button variant="destructive" onClick={onDelete}>
+            <Button 
+              variant="destructive" 
+              onClick={onDelete}
+              className="bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-500"
+            >
               Delete Profile
             </Button>
           )}
           <div className="flex gap-2">
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
-            <Button onClick={() => onSave(name)}>Save</Button>
+            <Button 
+              variant="ghost" 
+              onClick={onClose}
+              className="text-zinc-100 hover:bg-zinc-800"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={() => onSave(name)}
+              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
+            >
+              Save
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>

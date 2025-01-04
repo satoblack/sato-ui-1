@@ -32,11 +32,21 @@ export const ProfileList = ({
             Stream Profiles
           </CardTitle>
           <div className="flex gap-2">
-            <Button variant="ghost" size="icon" onClick={onNewProfile} className="hover:bg-zinc-800">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onNewProfile} 
+              className="hover:bg-zinc-800 text-zinc-100"
+            >
               <PlusIcon className="h-4 w-4" />
             </Button>
             {selectedProfile && (
-              <Button variant="ghost" size="icon" onClick={onEditProfile} className="hover:bg-zinc-800">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={onEditProfile} 
+                className="hover:bg-zinc-800 text-zinc-100"
+              >
                 <Pencil className="h-4 w-4" />
               </Button>
             )}
@@ -48,9 +58,13 @@ export const ProfileList = ({
           <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
             <SelectValue placeholder="Select profile" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-zinc-800 border-zinc-700">
             {profiles.map(profile => (
-              <SelectItem key={profile.id} value={profile.id.toString()}>
+              <SelectItem 
+                key={profile.id} 
+                value={profile.id.toString()}
+                className="text-zinc-100 hover:bg-zinc-700"
+              >
                 {profile.name}
               </SelectItem>
             ))}

@@ -25,7 +25,7 @@ const getIcon = (iconName: string) => {
     case 'kick':
       return <Video className="h-5 w-5 text-green-500" />;
     default:
-      return <Video className="h-5 w-5 text-gray-500" />;
+      return <Video className="h-5 w-5 text-zinc-400" />;
   }
 };
 
@@ -41,7 +41,7 @@ export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp }: Rtmp
             variant="ghost" 
             size="icon" 
             onClick={onNewRtmp}
-            className="hover:bg-zinc-800"
+            className="hover:bg-zinc-800 text-zinc-100"
           >
             <PlusIcon className="h-4 w-4" />
           </Button>
@@ -65,9 +65,9 @@ export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp }: Rtmp
                       variant="ghost" 
                       size="icon"
                       onClick={() => onEditRtmp(rtmp)}
-                      className="hover:bg-zinc-600"
+                      className="hover:bg-zinc-700 text-zinc-100"
                     >
-                      <Pencil className="h-4 w-4 text-zinc-400" />
+                      <Pencil className="h-4 w-4" />
                     </Button>
                   )}
                   {onDeleteRtmp && (
@@ -75,7 +75,7 @@ export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp }: Rtmp
                       variant="ghost" 
                       size="icon"
                       onClick={() => onDeleteRtmp(rtmp.id)}
-                      className="hover:bg-red-500/10 hover:text-red-500"
+                      className="hover:bg-red-500/10 text-red-400 hover:text-red-500"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
