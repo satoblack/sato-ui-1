@@ -5,26 +5,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Youtube, Twitch, Facebook, Video } from "lucide-react";
+import { Youtube, Twitch, Video } from "lucide-react";
 
 interface RtmpDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: { name: string; url: string; icon: string; videoFile?: File; audioFile?: File }) => void;
+  initialData?: { name: string; url: string; icon: string };
 }
 
 const streamServices = [
   { value: 'youtube', label: 'YouTube', icon: <Youtube className="h-4 w-4 text-red-500" /> },
   { value: 'twitch', label: 'Twitch', icon: <Twitch className="h-4 w-4 text-purple-500" /> },
-  { value: 'facebook', label: 'Facebook', icon: <Facebook className="h-4 w-4 text-blue-500" /> },
+  { value: 'kick', label: 'Kick', icon: <Video className="h-4 w-4 text-green-500" /> },
   { value: 'custom', label: 'Custom RTMP', icon: <Video className="h-4 w-4 text-gray-500" /> },
 ];
 
-export const RtmpDialog = ({ isOpen, onClose, onSave }: RtmpDialogProps) => {
+export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogProps) => {
   const [formData, setFormData] = useState({
-    name: '',
-    url: '',
-    icon: '',
+    name: initialData?.name || '',
+    url: initialData?.url || '',
+    icon: initialData?.icon || '',
     videoFile: undefined as File | undefined,
     audioFile: undefined as File | undefined
   });

@@ -4,7 +4,7 @@ import { ProfileList } from "./ProfileManagement/ProfileList";
 import { RtmpList } from "./ProfileManagement/RtmpList";
 import { ProfileDialog } from "./ProfileManagement/ProfileDialog";
 import { RtmpDialog } from "./ProfileManagement/RtmpDialog";
-import { Youtube, Twitch, Facebook, Video } from "lucide-react";
+import { Youtube, Twitch, Video } from "lucide-react";
 
 interface RtmpUrl {
   id: number;
@@ -66,6 +66,7 @@ export const StreamProfile = () => {
   const [isNewProfileDialogOpen, setIsNewProfileDialogOpen] = useState(false);
   const [isEditProfileDialogOpen, setIsEditProfileDialogOpen] = useState(false);
   const [isNewRtmpDialogOpen, setIsNewRtmpDialogOpen] = useState(false);
+  const [selectedRtmp, setSelectedRtmp] = useState<RtmpUrl | null>(null);
   const [newProfileName, setNewProfileName] = useState('');
   const { toast } = useToast();
 
@@ -124,6 +125,32 @@ export const StreamProfile = () => {
     });
   };
 
+  const handleEditRtmp = (rtmp: RtmpUrl) => {
+    setSelectedRtmp(rtmp);
+    setIsNewRtmpDialogOpen(true);
+    toast({
+      title: "Edit RTMP",
+      description: "Edit the RTMP endpoint settings."
+    });
+  };
+
+  const handleDeleteRtmp = (rtmpId: number) => {
+    setProfiles(profiles.map(profile => {
+      if (profile.id === selectedProfile) {
+        return {
+          ...profile,
+          rtmpUrls: profile.rtmpUrls.filter(url => url.id !== rtmpId)
+        };
+      }
+      return profile;
+    }));
+    
+    toast({
+      title: "RTMP Deleted",
+      description: "The RTMP endpoint has been removed."
+    });
+  };
+
   return (
     <div className="space-y-6">
       <ProfileList
@@ -137,7 +164,12 @@ export const StreamProfile = () => {
       {selectedProfile && (
         <RtmpList
           rtmpUrls={profiles.find(p => p.id === selectedProfile)?.rtmpUrls || []}
-          onNewRtmp={() => setIsNewRtmpDialogOpen(true)}
+          onNewRtmp={() => {
+            setSelectedRtmp(null);
+            setIsNewRtmpDialogOpen(true);
+          }}
+          onEditRtmp={handleEditRtmp}
+          onDeleteRtmp={handleDeleteRtmp}
         />
       )}
 
@@ -168,6 +200,7 @@ export const StreamProfile = () => {
         isOpen={isNewRtmpDialogOpen}
         onClose={() => setIsNewRtmpDialogOpen(false)}
         onSave={handleAddRtmpUrl}
+        initialData={selectedRtmp}
       />
     </div>
   );
