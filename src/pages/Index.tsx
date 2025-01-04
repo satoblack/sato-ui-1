@@ -27,7 +27,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-zinc-950">
+    <div className="flex min-h-screen bg-zinc-950">
       <NavigationMenu.Root className="w-16 border-r border-zinc-800 flex flex-col items-center py-4 gap-4">
         <NavigationMenu.Item>
           <Button 
@@ -61,7 +61,7 @@ const Index = () => {
         </NavigationMenu.Item>
       </NavigationMenu.Root>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto p-4">
         {activeTab === 'profile' && <StreamingForm />}
         {activeTab === 'control' && <StreamControlProfile />}
         {activeTab === 'server' && <ServerMonitor />}

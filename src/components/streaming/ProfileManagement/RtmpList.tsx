@@ -37,48 +37,55 @@ export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp }: Rtmp
           <CardTitle className="text-xl font-semibold text-zinc-100">
             RTMP Endpoints
           </CardTitle>
-          <Button variant="ghost" size="icon" onClick={onNewRtmp}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onNewRtmp}
+            className="hover:bg-zinc-800"
+          >
             <PlusIcon className="h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {rtmpUrls.map((rtmp) => (
-          <div 
-            key={rtmp.id} 
-            className="p-4 bg-zinc-800 rounded-lg space-y-2 hover:bg-zinc-700/50 transition-colors"
-          >
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                {getIcon(rtmp.icon)}
-                <h3 className="font-medium text-zinc-100">{rtmp.name}</h3>
+        <div className="grid gap-4 md:grid-cols-2">
+          {rtmpUrls.map((rtmp) => (
+            <div 
+              key={rtmp.id} 
+              className="p-4 bg-zinc-800 rounded-lg space-y-2 hover:bg-zinc-700/50 transition-colors"
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {getIcon(rtmp.icon)}
+                  <h3 className="font-medium text-zinc-100">{rtmp.name}</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  {onEditRtmp && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => onEditRtmp(rtmp)}
+                      className="hover:bg-zinc-600"
+                    >
+                      <Pencil className="h-4 w-4 text-zinc-400" />
+                    </Button>
+                  )}
+                  {onDeleteRtmp && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => onDeleteRtmp(rtmp.id)}
+                      className="hover:bg-red-500/10 hover:text-red-500"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {onEditRtmp && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => onEditRtmp(rtmp)}
-                    className="hover:bg-zinc-600"
-                  >
-                    <Pencil className="h-4 w-4 text-zinc-400" />
-                  </Button>
-                )}
-                {onDeleteRtmp && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => onDeleteRtmp(rtmp.id)}
-                    className="hover:bg-red-500/10 hover:text-red-500"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
+              <p className="text-sm text-zinc-400 font-mono break-all">{rtmp.url}</p>
             </div>
-            <p className="text-sm text-zinc-400 font-mono">{rtmp.url}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

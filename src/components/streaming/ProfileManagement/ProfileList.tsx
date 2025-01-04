@@ -32,11 +32,11 @@ export const ProfileList = ({
             Stream Profiles
           </CardTitle>
           <div className="flex gap-2">
-            <Button variant="ghost" size="icon" onClick={onNewProfile}>
+            <Button variant="ghost" size="icon" onClick={onNewProfile} className="hover:bg-zinc-800">
               <PlusIcon className="h-4 w-4" />
             </Button>
             {selectedProfile && (
-              <Button variant="ghost" size="icon" onClick={onEditProfile}>
+              <Button variant="ghost" size="icon" onClick={onEditProfile} className="hover:bg-zinc-800">
                 <Pencil className="h-4 w-4" />
               </Button>
             )}

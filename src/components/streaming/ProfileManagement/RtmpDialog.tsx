@@ -43,22 +43,9 @@ export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogP
     onSave(formData);
   };
 
-  const handleFileUpload = (type: 'video' | 'audio', file?: File) => {
-    if (file) {
-      setFormData(prev => ({
-        ...prev,
-        [type === 'video' ? 'videoFile' : 'audioFile']: file
-      }));
-      toast({
-        title: `${type.charAt(0).toUpperCase() + type.slice(1)} File Selected`,
-        description: `${file.name} has been selected successfully.`
-      });
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-zinc-900 border-zinc-800">
+      <DialogContent className="bg-zinc-900 border-zinc-800 sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-zinc-100">Add RTMP Endpoint</DialogTitle>
         </DialogHeader>
@@ -88,7 +75,6 @@ export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogP
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter RTMP name"
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              required
             />
           </div>
           <div className="space-y-2">
@@ -98,7 +84,6 @@ export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogP
               onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               placeholder="Enter RTMP URL"
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              required
             />
           </div>
           <div className="space-y-2">
@@ -106,9 +91,8 @@ export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogP
             <Input
               type="file"
               accept="video/*"
-              onChange={(e) => handleFileUpload('video', e.target.files?.[0])}
+              onChange={(e) => setFormData({ ...formData, videoFile: e.target.files?.[0] })}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              required
             />
           </div>
           <div className="space-y-2">
@@ -116,9 +100,8 @@ export const RtmpDialog = ({ isOpen, onClose, onSave, initialData }: RtmpDialogP
             <Input
               type="file"
               accept="audio/*"
-              onChange={(e) => handleFileUpload('audio', e.target.files?.[0])}
+              onChange={(e) => setFormData({ ...formData, audioFile: e.target.files?.[0] })}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              required
             />
           </div>
         </div>
