@@ -4,11 +4,13 @@ import { ProfileList } from "./ProfileManagement/ProfileList";
 import { RtmpList } from "./ProfileManagement/RtmpList";
 import { ProfileDialog } from "./ProfileManagement/ProfileDialog";
 import { RtmpDialog } from "./ProfileManagement/RtmpDialog";
+import { Youtube, Twitch, Facebook, Video } from "lucide-react";
 
 interface RtmpUrl {
   id: number;
   name: string;
   url: string;
+  icon: string;
   videoFile?: File;
   audioFile?: File;
 }
@@ -19,8 +21,47 @@ interface Profile {
   rtmpUrls: RtmpUrl[];
 }
 
+const defaultProfiles: Profile[] = [
+  {
+    id: 1,
+    name: "Gaming Stream",
+    rtmpUrls: [
+      {
+        id: 11,
+        name: "Twitch Main",
+        url: "rtmp://live.twitch.tv/app/",
+        icon: "twitch",
+      },
+      {
+        id: 12,
+        name: "YouTube Gaming",
+        url: "rtmp://a.rtmp.youtube.com/live2/",
+        icon: "youtube",
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: "Social Media",
+    rtmpUrls: [
+      {
+        id: 21,
+        name: "Facebook Live",
+        url: "rtmp://live-api-s.facebook.com:80/rtmp/",
+        icon: "facebook",
+      },
+      {
+        id: 22,
+        name: "Custom RTMP",
+        url: "rtmp://custom.streaming.server/live/",
+        icon: "video",
+      }
+    ]
+  }
+];
+
 export const StreamProfile = () => {
-  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>(defaultProfiles);
   const [selectedProfile, setSelectedProfile] = useState<number | null>(null);
   const [isNewProfileDialogOpen, setIsNewProfileDialogOpen] = useState(false);
   const [isEditProfileDialogOpen, setIsEditProfileDialogOpen] = useState(false);
@@ -56,7 +97,7 @@ export const StreamProfile = () => {
     });
   };
 
-  const handleAddRtmpUrl = (data: { name: string; url: string; videoFile?: File; audioFile?: File }) => {
+  const handleAddRtmpUrl = (data: { name: string; url: string; icon: string; videoFile?: File; audioFile?: File }) => {
     if (!selectedProfile || !data.name || !data.url) return;
     
     setProfiles(profiles.map(profile => {
@@ -67,6 +108,7 @@ export const StreamProfile = () => {
             id: Date.now(),
             name: data.name,
             url: data.url,
+            icon: data.icon,
             videoFile: data.videoFile,
             audioFile: data.audioFile
           }]
