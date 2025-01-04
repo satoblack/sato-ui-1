@@ -1,27 +1,24 @@
 import { useState } from "react";
-import { StreamingForm } from "@/components/streaming/StreamingForm";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { VideoIcon, GearIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import { MonitorIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { StreamMonitorView } from "@/components/streaming/StreamMonitorView";
-import { StreamSettings } from "@/components/streaming/StreamSettings";
+import { StreamingForm } from "@/components/streaming/StreamingForm";
+import { StreamControlProfile } from "@/components/streaming/StreamControl/StreamProfile";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<'stream' | 'monitor' | 'settings'>('stream');
+  const [activeTab, setActiveTab] = useState<'profile' | 'control'>('profile');
   const { toast } = useToast();
 
-  const handleTabChange = (tab: 'stream' | 'monitor' | 'settings') => {
+  const handleTabChange = (tab: 'profile' | 'control') => {
     setActiveTab(tab);
     const messages = {
-      stream: 'Yayın yönetimi aktif',
-      monitor: 'Monitör görünümü aktif',
-      settings: 'Ayarlar görünümü aktif'
+      profile: 'Profile management active',
+      control: 'Stream control active'
     };
     
     toast({
-      title: "Sekme Değiştirildi",
+      title: "Tab Changed",
       description: messages[tab],
     });
   };
@@ -31,40 +28,29 @@ const Index = () => {
       <NavigationMenu.Root className="w-16 border-r border-zinc-800 flex flex-col items-center py-4 gap-4">
         <NavigationMenu.Item>
           <Button 
-            variant={activeTab === 'stream' ? "secondary" : "ghost"} 
+            variant={activeTab === 'profile' ? "secondary" : "ghost"} 
             size="icon" 
             className="h-10 w-10"
-            onClick={() => handleTabChange('stream')}
-          >
-            <VideoIcon className="w-5 h-5 text-zinc-400" />
-          </Button>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <Button 
-            variant={activeTab === 'monitor' ? "secondary" : "ghost"} 
-            size="icon" 
-            className="h-10 w-10"
-            onClick={() => handleTabChange('monitor')}
-          >
-            <MonitorIcon className="w-5 h-5 text-zinc-400" />
-          </Button>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <Button 
-            variant={activeTab === 'settings' ? "secondary" : "ghost"} 
-            size="icon" 
-            className="h-10 w-10"
-            onClick={() => handleTabChange('settings')}
+            onClick={() => handleTabChange('profile')}
           >
             <GearIcon className="w-5 h-5 text-zinc-400" />
+          </Button>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item>
+          <Button 
+            variant={activeTab === 'control' ? "secondary" : "ghost"} 
+            size="icon" 
+            className="h-10 w-10"
+            onClick={() => handleTabChange('control')}
+          >
+            <VideoIcon className="w-5 h-5 text-zinc-400" />
           </Button>
         </NavigationMenu.Item>
       </NavigationMenu.Root>
 
       <div className="flex-1 overflow-auto">
-        {activeTab === 'stream' && <StreamingForm />}
-        {activeTab === 'monitor' && <StreamMonitorView />}
-        {activeTab === 'settings' && <StreamSettings />}
+        {activeTab === 'profile' && <StreamingForm />}
+        {activeTab === 'control' && <StreamControlProfile />}
       </div>
     </div>
   );
