@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,7 @@ export const ProfileDialog = ({
   showDelete,
   onDelete
 }: ProfileDialogProps) => {
-  const [name, setName] = React.useState(initialName);
+  const [name, setName] = useState(initialName);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

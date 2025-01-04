@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown, Play, Pause, Settings, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 
 interface RtmpEndpoint {
   id: number;
@@ -44,11 +45,73 @@ const sampleProfiles: StreamProfile[] = [
 ];
 
 export const StreamControlProfile = () => {
-  const [profiles] = useState<StreamProfile[]>(sampleProfiles);
+  const [profiles, setProfiles] = useState<StreamProfile[]>(sampleProfiles);
   const [expandedProfile, setExpandedProfile] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const toggleExpand = (profileId: number) => {
     setExpandedProfile(expandedProfile === profileId ? null : profileId);
+  };
+
+  const toggleProfileStream = (profileId: number) => {
+    setProfiles(profiles.map(profile => {
+      if (profile.id === profileId) {
+        const newStatus = !profile.isActive;
+        return {
+          ...profile,
+          isActive: newStatus,
+          rtmpEndpoints: profile.rtmpEndpoints.map(endpoint => ({
+            ...endpoint,
+            isActive: newStatus
+          }))
+        };
+      }
+      return profile;
+    }));
+
+    const profile = profiles.find(p => p.id === profileId);
+    toast({
+      title: `Profile ${profile?.isActive ? 'Stopped' : 'Started'}`,
+      description: `${profile?.name} has been ${profile?.isActive ? 'stopped' : 'started'} successfully.`
+    });
+  };
+
+  const toggleEndpointStream = (profileId: number, endpointId: number) => {
+    setProfiles(profiles.map(profile => {
+      if (profile.id === profileId) {
+        return {
+          ...profile,
+          rtmpEndpoints: profile.rtmpEndpoints.map(endpoint => {
+            if (endpoint.id === endpointId) {
+              return { ...endpoint, isActive: !endpoint.isActive };
+            }
+            return endpoint;
+          })
+        };
+      }
+      return profile;
+    }));
+
+    const profile = profiles.find(p => p.id === profileId);
+    const endpoint = profile?.rtmpEndpoints.find(e => e.id === endpointId);
+    toast({
+      title: `Endpoint ${endpoint?.isActive ? 'Stopped' : 'Started'}`,
+      description: `${endpoint?.name} has been ${endpoint?.isActive ? 'stopped' : 'started'} successfully.`
+    });
+  };
+
+  const showLogs = (endpointName: string) => {
+    toast({
+      title: "Logs Opened",
+      description: `Viewing logs for ${endpointName}`
+    });
+  };
+
+  const openSettings = (endpointName: string) => {
+    toast({
+      title: "Settings Opened",
+      description: `Configure settings for ${endpointName}`
+    });
   };
 
   return (
@@ -78,8 +141,13 @@ export const StreamControlProfile = () => {
                 Total Speed: {profile.totalSpeed} kbps
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  {profile.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => toggleProfileStream(profile.id)}
+                  className={profile.isActive ? "bg-red-500/10 hover:bg-red-500/20 text-red-500" : "bg-green-500/10 hover:bg-green-500/20 text-green-500"}
+                >
+                  {profile.isActive ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
                   {profile.isActive ? "Stop" : "Start"}
                 </Button>
               </div>
@@ -97,13 +165,28 @@ export const StreamControlProfile = () => {
                       <p className="text-sm text-zinc-400">{endpoint.speed} kbps</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => showLogs(endpoint.name)}
+                        className="hover:bg-zinc-700"
+                      >
                         <FileText className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => openSettings(endpoint.name)}
+                        className="hover:bg-zinc-700"
+                      >
                         <Settings className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => toggleEndpointStream(profile.id, endpoint.id)}
+                        className={endpoint.isActive ? "bg-red-500/10 hover:bg-red-500/20 text-red-500" : "bg-green-500/10 hover:bg-green-500/20 text-green-500"}
+                      >
                         {endpoint.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
                     </div>

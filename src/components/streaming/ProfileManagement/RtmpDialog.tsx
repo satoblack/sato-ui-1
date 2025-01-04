@@ -1,7 +1,9 @@
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 
 interface RtmpDialogProps {
   isOpen: boolean;
@@ -10,12 +12,26 @@ interface RtmpDialogProps {
 }
 
 export const RtmpDialog = ({ isOpen, onClose, onSave }: RtmpDialogProps) => {
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     name: '',
     url: '',
     videoFile: undefined as File | undefined,
     audioFile: undefined as File | undefined
   });
+  const { toast } = useToast();
+
+  const handleFileUpload = (type: 'video' | 'audio', file?: File) => {
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        [type === 'video' ? 'videoFile' : 'audioFile']: file
+      }));
+      toast({
+        title: `${type.charAt(0).toUpperCase() + type.slice(1)} File Selected`,
+        description: `${file.name} has been selected successfully.`
+      });
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -47,7 +63,7 @@ export const RtmpDialog = ({ isOpen, onClose, onSave }: RtmpDialogProps) => {
             <Input
               type="file"
               accept="video/*"
-              onChange={(e) => setFormData({ ...formData, videoFile: e.target.files?.[0] })}
+              onChange={(e) => handleFileUpload('video', e.target.files?.[0])}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
             />
           </div>
@@ -56,7 +72,7 @@ export const RtmpDialog = ({ isOpen, onClose, onSave }: RtmpDialogProps) => {
             <Input
               type="file"
               accept="audio/*"
-              onChange={(e) => setFormData({ ...formData, audioFile: e.target.files?.[0] })}
+              onChange={(e) => handleFileUpload('audio', e.target.files?.[0])}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
             />
           </div>
