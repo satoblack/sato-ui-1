@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, Play, Pause } from "lucide-react";
+import { ChevronUp, ChevronDown, Play, Pause, ArrowBigUp, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RtmpEndpointList } from "./RtmpEndpointList";
 import type { StreamProfile } from "./types";
@@ -22,6 +22,8 @@ export const ProfileCard = ({
   onToggleEndpointStream,
   onShowLogs
 }: ProfileCardProps) => {
+  const activeStreamsCount = profile.rtmpEndpoints.filter(endpoint => endpoint.isActive).length;
+
   return (
     <Card className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -47,9 +49,24 @@ export const ProfileCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex justify-between items-center mb-2">
-          <div className="text-sm text-zinc-400">
-            Total Speed: {profile.totalSpeed} kbps
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="p-4 bg-zinc-800 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <ArrowBigUp className="h-5 w-5 text-blue-500" />
+              <span className="text-zinc-400">Total Speed</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-500">
+              {profile.totalSpeed} kbps
+            </div>
+          </div>
+          <div className="p-4 bg-zinc-800 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="h-5 w-5 text-green-500" />
+              <span className="text-zinc-400">Active Streams</span>
+            </div>
+            <div className="text-2xl font-bold text-green-500">
+              {activeStreamsCount}
+            </div>
           </div>
         </div>
 
