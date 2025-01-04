@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Play, Pause, Activity, Signal, Cpu, Clock, AlertTriangle } from "lucide-react";
-import { Tooltip } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { RtmpEndpoint } from "./types";
 
 interface RtmpEndpointListProps {
@@ -44,7 +49,7 @@ export const RtmpEndpointList = ({
   onShowLogs
 }: RtmpEndpointListProps) => {
   return (
-    <>
+    <TooltipProvider>
       {endpoints.map((endpoint) => (
         <div
           key={endpoint.id}
@@ -54,34 +59,49 @@ export const RtmpEndpointList = ({
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h4 className="font-medium text-zinc-100">{endpoint.name}</h4>
-                <Tooltip content={`Stream Health: ${endpoint.health}`}>
-                  {getHealthIcon(endpoint.health)}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    {getHealthIcon(endpoint.health)}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Stream Health: {endpoint.health}</p>
+                  </TooltipContent>
                 </Tooltip>
               </div>
               <p className="text-sm text-zinc-400 font-mono">{endpoint.url}</p>
             </div>
             <div className="flex gap-2">
-              <Tooltip content="View Logs">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => onShowLogs(endpoint.name)}
-                  className="hover:bg-zinc-700 text-zinc-300"
-                >
-                  <FileText className="h-4 w-4" />
-                </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => onShowLogs(endpoint.name)}
+                    className="hover:bg-zinc-700 text-zinc-300"
+                  >
+                    <FileText className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View Logs</p>
+                </TooltipContent>
               </Tooltip>
-              <Tooltip content={endpoint.isActive ? "Stop Stream" : "Start Stream"}>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => onToggleStream(profileId, endpoint.id)}
-                  className={endpoint.isActive ? 
-                    "bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/50" : 
-                    "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/50"}
-                >
-                  {endpoint.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => onToggleStream(profileId, endpoint.id)}
+                    className={endpoint.isActive ? 
+                      "bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/50" : 
+                      "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/50"}
+                  >
+                    {endpoint.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{endpoint.isActive ? "Stop Stream" : "Start Stream"}</p>
+                </TooltipContent>
               </Tooltip>
             </div>
           </div>
@@ -136,6 +156,6 @@ export const RtmpEndpointList = ({
           </div>
         </div>
       ))}
-    </>
+    </TooltipProvider>
   );
 };
