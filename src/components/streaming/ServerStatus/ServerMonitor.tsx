@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Cpu, HardDrive, Memory } from "lucide-react";
+import { Activity, Cpu, HardDrive, Database } from "lucide-react";
 
 interface ServerMetrics {
   cpuUsage: number;
@@ -36,7 +36,7 @@ export const ServerMonitor = () => {
               status={sampleMetrics.cpuUsage > 80 ? 'error' : 'good'}
             />
             <MetricCard
-              icon={<Memory className="h-5 w-5" />}
+              icon={<Database className="h-5 w-5" />}
               title="Memory Usage"
               value={`${sampleMetrics.memoryUsage}%`}
               status={sampleMetrics.memoryUsage > 80 ? 'error' : 'good'}

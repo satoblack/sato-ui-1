@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { VideoIcon, GearIcon, ActivityIcon } from "@radix-ui/react-icons";
+import { VideoIcon, GearIcon } from "@radix-ui/react-icons";
+import { Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { StreamingForm } from "@/components/streaming/StreamingForm";
@@ -55,7 +56,7 @@ const Index = () => {
             className="h-10 w-10"
             onClick={() => handleTabChange('server')}
           >
-            <ActivityIcon className="w-5 h-5 text-zinc-400" />
+            <Activity className="w-5 h-5 text-zinc-400" />
           </Button>
         </NavigationMenu.Item>
       </NavigationMenu.Root>
