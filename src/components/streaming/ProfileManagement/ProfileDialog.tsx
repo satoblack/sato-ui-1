@@ -1,35 +1,72 @@
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import React, { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProfileDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (name: string) => void;
+  onDelete?: () => void;
   title: string;
   initialName?: string;
   showDelete?: boolean;
-  onDelete?: () => void;
 }
 
-export const ProfileDialog = ({
-  isOpen,
-  onClose,
-  onSave,
-  title,
-  initialName = '',
-  showDelete,
-  onDelete
+export const ProfileDialog = ({ 
+  isOpen, 
+  onClose, 
+  onSave, 
+  onDelete, 
+  title, 
+  initialName = '', 
+  showDelete = false 
 }: ProfileDialogProps) => {
   const [name, setName] = useState(initialName);
+  const { toast } = useToast();
+
+  // Dialog kapanırken formu sıfırla
+  useEffect(() => {
+    if (!isOpen) {
+      setName('');
+    }
+  }, [isOpen]);
+
+  // initialName değiştiğinde form verilerini güncelle
+  useEffect(() => {
+    if (initialName) {
+      setName(initialName);
+    }
+  }, [initialName]);
+
+  const handleSave = () => {
+    if (!name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Profile name is required.",
+        variant: "destructive"
+      });
+      return;
+    }
+    onSave(name);
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-zinc-900 border-zinc-800">
         <DialogHeader>
           <DialogTitle className="text-zinc-100">{title}</DialogTitle>
+          <DialogDescription className="text-zinc-400">
+            {showDelete ? 'Edit your streaming profile.' : 'Create a new streaming profile.'}
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
@@ -38,7 +75,7 @@ export const ProfileDialog = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter profile name"
-              className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+              className="bg-zinc-800 border-zinc-700 text-zinc-100"
             />
           </div>
         </div>
@@ -46,25 +83,19 @@ export const ProfileDialog = ({
           {showDelete && (
             <Button 
               variant="destructive" 
-              onClick={onDelete}
-              className="bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-500"
+              onClick={handleDelete}
+              className="mr-auto"
             >
               Delete Profile
             </Button>
           )}
           <div className="flex gap-2">
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
             <Button 
-              variant="ghost" 
-              onClick={onClose}
-              className="text-zinc-100 hover:bg-zinc-800"
+              onClick={handleSave}
+              disabled={!name.trim()}
             >
-              Cancel
-            </Button>
-            <Button 
-              onClick={() => onSave(name)}
-              className="bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
-            >
-              Save
+              {showDelete ? 'Save Changes' : 'Create Profile'}
             </Button>
           </div>
         </DialogFooter>
