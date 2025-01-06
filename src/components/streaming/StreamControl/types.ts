@@ -10,6 +10,13 @@ export interface RtmpEndpoint {
   totalFrames: number;
   uptime: string;
   health: 'good' | 'warning' | 'error';
+  networkStatus?: 'stable' | 'unstable' | 'error';
+  cpuUsage?: number;
+  serverLoad?: number;
+  streamQuality?: 'high' | 'medium' | 'low';
+  bandwidth?: number;
+  protocol?: string;
+  region?: string;
 }
 
 export interface StreamProfile {
@@ -18,4 +25,14 @@ export interface StreamProfile {
   totalSpeed: number;
   isActive: boolean;
   rtmpEndpoints: RtmpEndpoint[];
+  createdAt?: string;
+  lastActive?: string;
+  description?: string;
+  maxBitrate?: number;
+  preferredServer?: string;
+  settings?: {
+    autoReconnect: boolean;
+    lowLatencyMode: boolean;
+    qualityPreset: string;
+  };
 }

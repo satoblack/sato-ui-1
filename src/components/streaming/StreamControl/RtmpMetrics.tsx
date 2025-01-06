@@ -1,4 +1,4 @@
-import { ArrowBigUp, Users, Signal, AlertCircle, Clock, HardDrive } from "lucide-react";
+import { ArrowBigUp, Users, Signal, AlertCircle, Clock, HardDrive, Wifi, Gauge, Server, Activity } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -111,7 +111,7 @@ export const RtmpMetrics = ({
           </Tooltip>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
@@ -131,16 +131,69 @@ export const RtmpMetrics = ({
             <TooltipTrigger asChild>
               <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
                 <div className="flex items-center gap-2 mb-2">
-                  <HardDrive className="h-5 w-5 text-cyan-400" />
-                  <span className="text-zinc-400">Storage Usage</span>
+                  <Wifi className="h-5 w-5 text-cyan-400" />
+                  <span className="text-zinc-400">Network Status</span>
                 </div>
                 <div className="text-xl font-semibold text-cyan-400">
-                  0 MB
+                  Stable
                 </div>
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Storage usage for media files</p>
+              <p>Current network connection status</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                <div className="flex items-center gap-2 mb-2">
+                  <Server className="h-5 w-5 text-indigo-400" />
+                  <span className="text-zinc-400">Server Load</span>
+                </div>
+                <div className="text-xl font-semibold text-indigo-400">
+                  45%
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Current server resource usage</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                <div className="flex items-center gap-2 mb-2">
+                  <Gauge className="h-5 w-5 text-rose-400" />
+                  <span className="text-zinc-400">CPU Usage</span>
+                </div>
+                <div className="text-xl font-semibold text-rose-400">
+                  32%
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Current CPU utilization</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                <div className="flex items-center gap-2 mb-2">
+                  <Activity className="h-5 w-5 text-teal-400" />
+                  <span className="text-zinc-400">Stream Health</span>
+                </div>
+                <div className="text-xl font-semibold text-teal-400">
+                  Good
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Overall stream health status</p>
             </TooltipContent>
           </Tooltip>
         </div>
