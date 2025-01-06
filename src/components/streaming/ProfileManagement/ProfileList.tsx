@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusIcon, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 
 interface Profile {
   id: number;
@@ -55,10 +54,7 @@ export const ProfileList = ({
         </div>
       </CardHeader>
       <CardContent>
-        <Select 
-          value={selectedProfile?.toString()} 
-          onValueChange={(value) => onSelectProfile(Number(value))}
-        >
+        <Select onValueChange={(value) => onSelectProfile(Number(value))}>
           <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100">
             <SelectValue placeholder="Select profile" />
           </SelectTrigger>

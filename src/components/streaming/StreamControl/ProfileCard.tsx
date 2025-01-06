@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, Play, Pause } from "lucide-react";
+import { ChevronUp, ChevronDown, Play, Pause, ArrowBigUp, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RtmpEndpointList } from "./RtmpEndpointList";
-import { RtmpMetrics } from "./RtmpMetrics";
 import type { StreamProfile } from "./types";
 
 interface ProfileCardProps {
@@ -24,9 +23,6 @@ export const ProfileCard = ({
   onShowLogs
 }: ProfileCardProps) => {
   const activeStreamsCount = profile.rtmpEndpoints.filter(endpoint => endpoint.isActive).length;
-  const totalDroppedFrames = profile.rtmpEndpoints.reduce((total, endpoint) => total + endpoint.droppedFrames, 0);
-  const averageFps = profile.rtmpEndpoints.reduce((total, endpoint) => total + endpoint.currentFps, 0) / profile.rtmpEndpoints.length;
-  const uptime = profile.rtmpEndpoints[0]?.uptime || "00:00:00";
 
   return (
     <Card className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors">
@@ -60,13 +56,26 @@ export const ProfileCard = ({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <RtmpMetrics
-          totalSpeed={profile.totalSpeed}
-          activeStreamsCount={activeStreamsCount}
-          averageFps={averageFps}
-          totalDroppedFrames={totalDroppedFrames}
-          uptime={uptime}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <ArrowBigUp className="h-5 w-5 text-blue-400" />
+              <span className="text-zinc-400">Total Speed</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-400">
+              {profile.totalSpeed} kbps
+            </div>
+          </div>
+          <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="h-5 w-5 text-emerald-400" />
+              <span className="text-zinc-400">Active Streams</span>
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              {activeStreamsCount}
+            </div>
+          </div>
+        </div>
 
         {isExpanded && (
           <div className="space-y-4 pt-4 border-t border-zinc-800">
