@@ -1,9 +1,21 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, Play, Pause, ArrowBigUp, Users } from "lucide-react";
+import { 
+  ChevronUp, 
+  ChevronDown, 
+  Play, 
+  Pause, 
+  ArrowBigUp, 
+  Users, 
+  Clock, 
+  Signal, 
+  HardDrive,
+  AlertCircle
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RtmpEndpointList } from "./RtmpEndpointList";
 import type { StreamProfile } from "./types";
+import { Tooltip } from "@/components/ui/tooltip";
 
 interface ProfileCardProps {
   profile: StreamProfile;
@@ -23,6 +35,26 @@ export const ProfileCard = ({
   onShowLogs
 }: ProfileCardProps) => {
   const activeStreamsCount = profile.rtmpEndpoints.filter(endpoint => endpoint.isActive).length;
+  const totalDroppedFrames = profile.rtmpEndpoints.reduce((total, endpoint) => total + endpoint.droppedFrames, 0);
+  const averageFps = profile.rtmpEndpoints.reduce((total, endpoint) => total + endpoint.currentFps, 0) / profile.rtmpEndpoints.length;
+  const uptime = profile.rtmpEndpoints[0]?.uptime || "00:00:00";
+
+  const getHealthStatus = () => {
+    if (totalDroppedFrames > 100) return "error";
+    if (totalDroppedFrames > 50) return "warning";
+    return "good";
+  };
+
+  const getHealthColor = () => {
+    switch (getHealthStatus()) {
+      case "error":
+        return "text-red-500";
+      case "warning":
+        return "text-amber-500";
+      default:
+        return "text-emerald-500";
+    }
+  };
 
   return (
     <Card className="bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors">
@@ -56,25 +88,79 @@ export const ProfileCard = ({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Tooltip content="Total streaming speed across all endpoints">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <ArrowBigUp className="h-5 w-5 text-blue-400" />
+                <span className="text-zinc-400">Total Speed</span>
+              </div>
+              <div className="text-2xl font-bold text-blue-400">
+                {profile.totalSpeed} kbps
+              </div>
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Number of active streaming endpoints">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Users className="h-5 w-5 text-emerald-400" />
+                <span className="text-zinc-400">Active Streams</span>
+              </div>
+              <div className="text-2xl font-bold text-emerald-400">
+                {activeStreamsCount}
+              </div>
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Average frames per second across all endpoints">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Signal className="h-5 w-5 text-purple-400" />
+                <span className="text-zinc-400">Average FPS</span>
+              </div>
+              <div className="text-2xl font-bold text-purple-400">
+                {averageFps.toFixed(1)}
+              </div>
+            </div>
+          </Tooltip>
+
+          <Tooltip content="Total dropped frames across all endpoints">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <AlertCircle className={`h-5 w-5 ${getHealthColor()}`} />
+                <span className="text-zinc-400">Dropped Frames</span>
+              </div>
+              <div className={`text-2xl font-bold ${getHealthColor()}`}>
+                {totalDroppedFrames}
+              </div>
+            </div>
+          </Tooltip>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
-            <div className="flex items-center gap-2 mb-2">
-              <ArrowBigUp className="h-5 w-5 text-blue-400" />
-              <span className="text-zinc-400">Total Speed</span>
+          <Tooltip content="Total streaming duration">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="h-5 w-5 text-amber-400" />
+                <span className="text-zinc-400">Uptime</span>
+              </div>
+              <div className="text-xl font-semibold text-amber-400">{uptime}</div>
             </div>
-            <div className="text-2xl font-bold text-blue-400">
-              {profile.totalSpeed} kbps
+          </Tooltip>
+
+          <Tooltip content="Storage usage for media files">
+            <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+              <div className="flex items-center gap-2 mb-2">
+                <HardDrive className="h-5 w-5 text-cyan-400" />
+                <span className="text-zinc-400">Storage Usage</span>
+              </div>
+              <div className="text-xl font-semibold text-cyan-400">
+                {/* This would need to be calculated from actual storage data */}
+                0 MB
+              </div>
             </div>
-          </div>
-          <div className="p-4 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="h-5 w-5 text-emerald-400" />
-              <span className="text-zinc-400">Active Streams</span>
-            </div>
-            <div className="text-2xl font-bold text-emerald-400">
-              {activeStreamsCount}
-            </div>
-          </div>
+          </Tooltip>
         </div>
 
         {isExpanded && (
