@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Play, Pause, Activity, Signal, Cpu, Clock, AlertTriangle, Youtube, Twitch, Video } from "lucide-react";
@@ -8,31 +9,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
+import type { RtmpEndpoint } from "./types";
 
-interface RtmpUrl {
-  id: number;
-  name: string;
-  url: string;
-  icon: string;
-  isActive?: boolean;
-  health?: 'good' | 'warning' | 'error';
-  currentFps?: number;
-  bitrate?: string;
-  uptime?: string;
-  droppedFrames?: number;
-  totalFrames?: number;
+interface RtmpEndpointListProps {
+  endpoints: RtmpEndpoint[];
+  profileId: number;
+  onToggleStream: (profileId: number, endpointId: number) => void;
+  onShowLogs: (name: string) => void;
 }
 
-interface RtmpListProps {
-  rtmpUrls: RtmpUrl[];
-  onNewRtmp: () => void;
-  onEditRtmp?: (rtmp: RtmpUrl) => void;
-  onDeleteRtmp?: (id: number) => void;
-  onToggleStream?: (id: number) => void;
-}
-
-const getIcon = (iconName: string) => {
-  switch (iconName.toLowerCase()) {
+const getIcon = (name: string) => {
+  switch (name.toLowerCase()) {
     case 'youtube':
       return <Youtube className="h-5 w-5 text-red-500" />;
     case 'twitch':
@@ -70,85 +57,100 @@ const getHealthIcon = (health: 'good' | 'warning' | 'error' = 'good') => {
   }
 };
 
-export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp, onToggleStream }: RtmpListProps) => {
+export const RtmpEndpointList = ({ endpoints, profileId, onToggleStream, onShowLogs }: RtmpEndpointListProps) => {
   return (
     <Card className="bg-zinc-900 border-zinc-800">
       <CardContent className="space-y-4 p-6">
         <div className="grid gap-4 md:grid-cols-2">
-          {rtmpUrls.map((rtmp) => (
+          {endpoints.map((endpoint) => (
             <div 
-              key={rtmp.id} 
+              key={endpoint.id} 
               className="p-4 bg-zinc-800/50 rounded-lg space-y-4 hover:bg-zinc-700/50 transition-colors border border-zinc-700/50"
             >
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    {getIcon(rtmp.icon)}
-                    <h4 className="font-medium text-zinc-100">{rtmp.name}</h4>
+                    {getIcon(endpoint.name)}
+                    <h4 className="font-medium text-zinc-100">{endpoint.name}</h4>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          {getHealthIcon(rtmp.health)}
+                          {getHealthIcon(endpoint.health)}
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Stream Health: {rtmp.health || 'good'}</p>
+                          <p>Stream Health: {endpoint.health}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <p className="text-sm text-zinc-400 font-mono break-all">{rtmp.url}</p>
+                  <p className="text-sm text-zinc-400 font-mono break-all">{endpoint.url}</p>
                 </div>
                 <div className="flex gap-2">
-                  {onToggleStream && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => onToggleStream(rtmp.id)}
-                            className={rtmp.isActive ? 
-                              "bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/50" : 
-                              "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/50"}
-                          >
-                            {rtmp.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{rtmp.isActive ? "Stop Stream" : "Start Stream"}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => onToggleStream(profileId, endpoint.id)}
+                          className={endpoint.isActive ? 
+                            "bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/50" : 
+                            "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/50"}
+                        >
+                          {endpoint.isActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{endpoint.isActive ? "Stop Stream" : "Start Stream"}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onShowLogs(endpoint.name)}
+                          className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/50"
+                        >
+                          <FileText className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View Logs</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
               
-              {rtmp.isActive && (
+              {endpoint.isActive && (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-zinc-300">
                         <Cpu className="w-4 h-4" />
                         <span className="text-zinc-400">FPS:</span>
-                        <span className="ml-auto font-mono">{rtmp.currentFps || 0}</span>
+                        <span className="ml-auto font-mono">{endpoint.currentFps}</span>
                       </div>
                       <div className="flex items-center gap-2 text-zinc-300">
                         <Activity className="w-4 h-4" />
                         <span className="text-zinc-400">Bitrate:</span>
-                        <span className="ml-auto font-mono">{rtmp.bitrate || '0 kbps'}</span>
+                        <span className="ml-auto font-mono">{endpoint.bitrate}</span>
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-zinc-300">
                         <Clock className="w-4 h-4" />
                         <span className="text-zinc-400">Uptime:</span>
-                        <span className="ml-auto font-mono">{rtmp.uptime || '00:00:00'}</span>
+                        <span className="ml-auto font-mono">{endpoint.uptime}</span>
                       </div>
                       <div className="flex items-center gap-2 text-zinc-300">
-                        <AlertTriangle className={`w-4 h-4 ${(rtmp.droppedFrames || 0) > 0 ? 'text-amber-400' : 'text-zinc-400'}`} />
+                        <AlertTriangle className={`w-4 h-4 ${endpoint.droppedFrames > 0 ? 'text-amber-400' : 'text-zinc-400'}`} />
                         <span className="text-zinc-400">Dropped:</span>
-                        <span className={`ml-auto font-mono ${(rtmp.droppedFrames || 0) > 0 ? 'text-amber-400' : 'text-zinc-300'}`}>
-                          {rtmp.droppedFrames || 0}
+                        <span className={`ml-auto font-mono ${endpoint.droppedFrames > 0 ? 'text-amber-400' : 'text-zinc-300'}`}>
+                          {endpoint.droppedFrames}
                         </span>
                       </div>
                     </div>
@@ -160,19 +162,19 @@ export const RtmpList = ({ rtmpUrls, onNewRtmp, onEditRtmp, onDeleteRtmp, onTogg
                         <Activity className="w-4 h-4 text-zinc-400" />
                         <span className="text-zinc-400">Stream Health</span>
                       </div>
-                      <span className={`font-mono ${getHealthColor(rtmp.health)}`}>
-                        {rtmp.totalFrames ? 
-                          ((((rtmp.totalFrames || 0) - (rtmp.droppedFrames || 0)) / (rtmp.totalFrames || 1)) * 100).toFixed(1) + '%' 
+                      <span className={`font-mono ${getHealthColor(endpoint.health)}`}>
+                        {endpoint.totalFrames ? 
+                          (((endpoint.totalFrames - endpoint.droppedFrames) / endpoint.totalFrames) * 100).toFixed(1) + '%' 
                           : '100%'}
                       </span>
                     </div>
                     <Progress 
-                      value={rtmp.totalFrames ? 
-                        ((((rtmp.totalFrames || 0) - (rtmp.droppedFrames || 0)) / (rtmp.totalFrames || 1)) * 100)
+                      value={endpoint.totalFrames ? 
+                        (((endpoint.totalFrames - endpoint.droppedFrames) / endpoint.totalFrames) * 100)
                         : 100} 
                       className={`h-1.5 ${
-                        rtmp.health === 'good' ? 'bg-emerald-950 [&>div]:bg-emerald-500' :
-                        rtmp.health === 'warning' ? 'bg-amber-950 [&>div]:bg-amber-500' :
+                        endpoint.health === 'good' ? 'bg-emerald-950 [&>div]:bg-emerald-500' :
+                        endpoint.health === 'warning' ? 'bg-amber-950 [&>div]:bg-amber-500' :
                         'bg-red-950 [&>div]:bg-red-500'
                       }`}
                     />
